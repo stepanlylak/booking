@@ -1,10 +1,10 @@
-import { defineConfig, transformWithEsbuild} from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
+import react from '@vitejs/plugin-react-swc';
+import { defineConfig, transformWithEsbuild } from 'vite';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,7 +15,7 @@ export default defineConfig({
       '@api': resolve(__dirname, './src/api'),
       '@pages': resolve(__dirname, './src/pages'),
       '@services': resolve(__dirname, './src/services'),
-      '@constants': resolve(__dirname, './src/constants'),
+      '@constants': resolve(__dirname, './src/constants')
     }
   },
   plugins: [
@@ -58,4 +58,4 @@ export default defineConfig({
       }
     }
   }
-})
+});
