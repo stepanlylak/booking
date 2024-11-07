@@ -1,5 +1,5 @@
 import Home from '@pages/Home/Home.js';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import MainLayout from './MainLayout/MainLayout.js';
 
@@ -10,6 +10,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />
+      },
+      {
+        path: '*',
+        element: <Navigate to="/" replace />
       }
     ]
   }
