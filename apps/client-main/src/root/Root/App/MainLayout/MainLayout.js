@@ -1,9 +1,14 @@
-import { Layout, Menu, theme } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { DownOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
+import { Dropdown, Layout, Menu, Space } from 'antd';
+import { useMemo, useState } from 'react';
+import { Link, Outlet } from 'react-router-dom';
+
+import UsersApi from '../../../../api/UsersApi.js';
 
 import './MainLayout.scss';
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Sider, Footer } = Layout;
 
 const items1 = [
   {
@@ -13,9 +18,30 @@ const items1 = [
 ];
 
 export default function MainLayout() {
-  const {
-    token: { colorBgContainer, borderRadiusLG }
-  } = theme.useToken();
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['UsersApi.getAll'],
+    queryFn: UsersApi.getAll
+  });
+
+  const [user, setUser] = useState(null);
+
+  const userMenu = useMemo(
+    function () {
+      if (!data) return { items: [] };
+      return {
+        onClick({ key }) {
+          setUser(data.find((item) => item._id === key));
+        },
+        items: data.map(function (item) {
+          return { key: item._id, label: item.name };
+        })
+      };
+    },
+    [data]
+  );
+
+  console.log(isLoading, data);
+
   return (
     <Layout className="main-layout">
       <Header
@@ -28,7 +54,9 @@ export default function MainLayout() {
           alignItems: 'center'
         }}
       >
-        <div className="header-logo">Booking</div>
+        <Link to="/" className="header-logo">
+          Booking
+        </Link>
         <Menu
           theme="dark"
           mode="horizontal"
@@ -39,6 +67,14 @@ export default function MainLayout() {
             minWidth: 0
           }}
         />
+        <Dropdown menu={userMenu}>
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              {user?.name || 'user not selected'}
+              <DownOutlined />
+            </Space>
+          </a>
+        </Dropdown>
       </Header>
       <Content
         style={{
@@ -46,16 +82,7 @@ export default function MainLayout() {
           marginTop: '30px'
         }}
       >
-        <div
-          style={{
-            padding: 24,
-            minHeight: 380,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG
-          }}
-        >
-          <Outlet />
-        </div>
+        <Outlet />
       </Content>
       <Footer
         style={{

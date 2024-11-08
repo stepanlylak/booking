@@ -1,0 +1,14 @@
+.boo-hotel {
+  .boo-hotel-header {
+    display: flex;
+    > div {
+      &.boo-hotel-header-left {
+
+      }
+      &.boo-hotel-header-right {
+        flex: 1;
+        padding-left: 24px;
+      }
+    }
+  }
+}
