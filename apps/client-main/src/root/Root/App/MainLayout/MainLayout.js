@@ -1,47 +1,20 @@
-import { DownOutlined } from '@ant-design/icons';
-import { useQuery } from '@tanstack/react-query';
-import { Dropdown, Layout, Menu, Space } from 'antd';
-import { useMemo, useState } from 'react';
+import { Layout, Menu } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 
-import UsersApi from '../../../../api/UsersApi.js';
+import CurrentUserSelect from '../../CurrentUserProvider/CurrentUserSelect.js';
 
 import './MainLayout.scss';
 
-const { Header, Content, Sider, Footer } = Layout;
+const { Header, Content, Footer } = Layout;
 
-const items1 = [
+const menu = [
   {
-    key: 'home',
-    label: `Home`
+    key: 'reservations',
+    label: <Link to="/profile/reservations">My Reservations</Link>
   }
 ];
 
 export default function MainLayout() {
-  const { isLoading, error, data } = useQuery({
-    queryKey: ['UsersApi.getAll'],
-    queryFn: UsersApi.getAll
-  });
-
-  const [user, setUser] = useState(null);
-
-  const userMenu = useMemo(
-    function () {
-      if (!data) return { items: [] };
-      return {
-        onClick({ key }) {
-          setUser(data.find((item) => item._id === key));
-        },
-        items: data.map(function (item) {
-          return { key: item._id, label: item.name };
-        })
-      };
-    },
-    [data]
-  );
-
-  console.log(isLoading, data);
-
   return (
     <Layout className="main-layout">
       <Header
@@ -60,21 +33,14 @@ export default function MainLayout() {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={['home']}
-          items={items1}
+          defaultSelectedKeys={['reservations']}
+          items={menu}
           style={{
             flex: 1,
             minWidth: 0
           }}
         />
-        <Dropdown menu={userMenu}>
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>
-              {user?.name || 'user not selected'}
-              <DownOutlined />
-            </Space>
-          </a>
-        </Dropdown>
+        <CurrentUserSelect />
       </Header>
       <Content
         style={{
