@@ -5,8 +5,9 @@ import { join } from "node:path";
 import { ConfigModule } from "@nestjs/config";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { MongooseModule } from "@nestjs/mongoose";
-import { SeedService } from './seed/seed.service';
 import { UsersModule } from './users/users.module';
+import { HotelsModule } from "./hotels/hotels.module";
+import { SeedModule } from "./seed/seed.module";
 
 @Module({
   imports: [
@@ -15,7 +16,9 @@ import { UsersModule } from './users/users.module';
       rootPath: join(__dirname, '../../client-main/dist')
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/booking'),
+    SeedModule,
     UsersModule,
+    HotelsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
