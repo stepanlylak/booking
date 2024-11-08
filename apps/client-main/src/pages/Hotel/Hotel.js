@@ -1,20 +1,26 @@
-import { EnvironmentOutlined, UserOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Card, Descriptions, Divider, Flex, List, Tag, theme, Typography } from 'antd';
+import { Button, Card, Descriptions, Divider, Flex, List, notification, Tag, theme, Typography } from 'antd';
 import { useParams } from 'react-router-dom';
 
 import HotelsApi from '../../api/HotelsApi.js';
+import UsersApi from '../../api/UsersApi.js';
 import ImagePreview from '../../components/ImagePreview/ImagePreview.js';
+import { useCurrentUser } from '../../root/Root/CurrentUserProvider/CurrentUserProvider.js';
 
 import './Hotel.scss';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
 export default function Hotel() {
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken();
+  const [api, contextHolder] = notification.useNotification();
   const { hotelId } = useParams();
+
+  const { currentUser } = useCurrentUser();
+  const userId = currentUser?._id;
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['HotelsApi.getAll', hotelId],
@@ -36,6 +42,7 @@ export default function Hotel() {
         borderRadius: borderRadiusLG
       }}
     >
+      {contextHolder}
       <div className="boo-hotel-header">
         <div className="boo-hotel-header-left">
           <ImagePreview item={data} width="600px" height="400px" />
@@ -99,8 +106,22 @@ export default function Hotel() {
               </div>
               <Divider />
               <Flex gap="small" wrap justify="space-between" align="center">
-                <div><UserOutlined /> {room.guests}</div>
-                <Button color="primary" variant="dashed">
+                <div>
+                  <UserOutlined /> {room.guests}
+                </div>
+                <Button
+                  color="primary"
+                  variant="dashed"
+                  onClick={function () {
+                    UsersApi.createReservation(userId, { hotel: data._id, room: room._id }).then(function () {
+                      api.success({
+                        message: 'Notification',
+                        description: 'Reservation added successfully.',
+                        icon: <SmileOutlined style={{ color: '#108ee9' }} />
+                      });
+                    });
+                  }}
+                >
                   Reserve
                 </Button>
               </Flex>
