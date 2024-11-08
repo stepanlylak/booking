@@ -41,7 +41,7 @@ export class Hotel {
 export const HotelSchema = SchemaFactory.createForClass(Hotel);
 
 export type HotelDocumentOverride = {
-  name: Types.DocumentArray<Room>;
+  rooms: Types.DocumentArray<Room>;
 };
 
 export type HotelDocument = HydratedDocument<Hotel, HotelDocumentOverride>;
