@@ -1,0 +1,7 @@
+.boo-list-item.ant-list-item.ant-list-item-no-flex  {
+  display: flex;
+  .boo-list-item-content {
+    padding-left: 24px;
+    flex: 1;
+  }
+}

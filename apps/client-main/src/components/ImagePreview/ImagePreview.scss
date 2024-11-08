@@ -1,0 +1,6 @@
+.boo-image-preview {
+  overflow: hidden;
+  > .ant-image {
+    display: none;
+  }
+}
